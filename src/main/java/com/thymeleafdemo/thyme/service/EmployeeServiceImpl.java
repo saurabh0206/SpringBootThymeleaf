@@ -3,8 +3,8 @@ package com.thymeleafdemo.thyme.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.thymeleafdemo.thyme.dao.EmployeeRepository;
 import com.thymeleafdemo.thyme.entity.Employee;
@@ -14,15 +14,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	private EmployeeRepository employeeRepository;
 
+	@Autowired
 	public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository) {
 		employeeRepository = theEmployeeRepository;
-
 	}
 
 	@Override
-	@Transactional
 	public List<Employee> findAll() {
-
 		return employeeRepository.findAllByOrderByLastNameAsc();
 	}
 
@@ -35,7 +33,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (result.isPresent()) {
 			theEmployee = result.get();
 		} else {
-			throw new RuntimeException(" Employee not found with id  " + theId);
+			// we didn't find the employee
+			throw new RuntimeException("Did not find employee id - " + theId);
 		}
 
 		return theEmployee;
@@ -43,15 +42,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void save(Employee theEmployee) {
-		// TODO Auto-generated method stub
 		employeeRepository.save(theEmployee);
-
 	}
 
 	@Override
-	@Transactional
 	public void deleteById(int theId) {
-		// TODO Auto-generated method stub
 		employeeRepository.deleteById(theId);
 	}
 
